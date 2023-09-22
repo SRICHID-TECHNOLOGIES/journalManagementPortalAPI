@@ -16,7 +16,7 @@ namespace FPL.Api.Controllers
         private string password;
 
 
-        private string passwordhhhhhhhhhhhhhhhh;
+        private string password;
         private string confirmPassword;
 
         public string Password { get; private set; }
