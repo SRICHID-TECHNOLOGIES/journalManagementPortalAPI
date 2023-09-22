@@ -3,7 +3,7 @@ using System.Web.Optimization;
 
 namespace FPL.Api
 {
-    public class BundleConfig
+    public class BundleConfigkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk
     {
         // For more information on bundling, visit http://go.microsoft.com/fwlink/?LinkId=301862
         public static void RegisterBundles(BundleCollection bundles)
