@@ -25,7 +25,7 @@
 //                countrytable country = new countrytable()
 //                {
 //                    countryname = data.countryname,
- 
+
 //                };
 //                db.countrytables.Add(country);
 //                await db.SaveChangesAsync();
@@ -47,7 +47,7 @@
 //                return Ok(countryData);
 //            }
 //            catch (Exception e)
-//            {   
+//            {
 //                throw e;
 //            }
 //        }
