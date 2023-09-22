@@ -15,8 +15,6 @@ namespace FPL.Api.Controllers
         private JournalManagementPortalEntities db = new JournalManagementPortalEntities();
         private string password;
 
-
-        private string password;
         private string confirmPassword;
 
         public string Password { get; private set; }
