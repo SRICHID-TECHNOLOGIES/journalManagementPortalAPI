@@ -26,26 +26,38 @@ namespace FPL.Api.Controllers
             public string userName { get; set; }
             public string Email { get; set; }
             public string Password { get; set; }
+            public int? RoleID { get; set; }
         }
 
         [HttpPost]
         public async Task<IHttpActionResult> Signin(LoginUserModel model)
         {
-            var user = db.Register_Table.Where(x => x.Email == model.Email).FirstOrDefault();
-            if (user == null || user.Password != model.Password)
+            try
             {
-                return Ok("fail");
+                var email = model.Email;
+
+                var user = db.Register_Table.Where(x => x.Email == email).FirstOrDefault();
+                if (user == null || user.Password != model.Password)
+                {
+                    return Ok("fail");
+                }
+                var token = GenerateJwtToken(user);
+                var data = new Register_TableVM()
+                {
+                    Email = user.Email,
+                    RoleID = user.RoleID,
+                    Token = token,
+                    RegisterID = user.RegisterID,
+                    FullName = user.FullName,
+                };
+                return Ok(data);
             }
-            var token = GenerateJwtToken(user);
-            var data = new Register_TableVM()
+            catch (Exception e)
             {
-                Email = user.Email,
-                RoleID = user.RoleID,
-                Token = token,
-                RegisterID = user.RegisterID,
-                FullName = user.FullName,
-            };
-            return Ok(data);
+
+                throw;
+            }
+          
         }
 
         [HttpPost]
@@ -76,7 +88,7 @@ namespace FPL.Api.Controllers
             public string Email { get; set; }
             public string Token { get; set; }
 
-            public Nullable<int> RoleID { get; set; }
+            public int? RoleID { get; set; }
 
         }
 

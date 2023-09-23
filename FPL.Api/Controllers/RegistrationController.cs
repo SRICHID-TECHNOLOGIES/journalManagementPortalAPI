@@ -39,9 +39,10 @@ namespace FPL.Api.Controllers
                     City = data.City,
                     State = data.State,
                     Pincode = data.Pincode,
-                    CreratedOn = DateTime.Now,
                     Password = data.Password,
-                    ConfirmPassword = data.ConfirmPassword
+                    ConfirmPassword = data.ConfirmPassword,
+                    RoleID=data.RoleID,
+                    RoleName=data.RoleName
                 };
                 db.Register_Table.Add(registration);
                 db.SaveChanges();
@@ -163,10 +164,9 @@ namespace FPL.Api.Controllers
             public string ConfirmPassword { get; set; }
             public string Captcha { get; set; }
 
-            public Nullable<System.DateTime> CreratedOn { get; set; }
-
-            public Nullable<System.DateTime> ModifiedOn { get; set; }
-            
+           
+            public Nullable<int> RoleID { get; set; }
+            public string RoleName { get; set; }
 
         }
         public async Task<IHttpActionResult> Savesubjectcontent(subjectcontent_Table data)
