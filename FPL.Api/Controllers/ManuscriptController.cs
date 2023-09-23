@@ -39,22 +39,29 @@ namespace FPL.Api.Controllers
             try
             {
                 var httpRequest = HttpContext.Current.Request;
-
-
+                var doclink = "";
+                var undertakingdoclink = "";
+                var manuscriptPDFLink = "";
+                var manuscriptNo = httpRequest["ManuscriptNo"];
+                var subjects = httpRequest["Subject"];
+                var subjectId = Convert.ToInt32(subjects);
+                var subjectName = db.subjectcontent_Table.Where(c => c.SubjectID == subjectId).Select(c => c.SubjectName).FirstOrDefault();
+                var title = httpRequest["Title"];
+                var manuscripttype = httpRequest["ManuscriptType"];
+                var ManuscriptID = Convert.ToInt32(manuscripttype);
+                var ManuscriptName = db.Manuscript_Table.Where(c => c.ManuscriptID == ManuscriptID).Select(c => c.ManuscriptName).FirstOrDefault();
+                var abstracts = httpRequest["Abstract"];
                 // Loop through uploaded files
+                
                 foreach (string fileKey in httpRequest.Files)
                 {
                     var hpf = httpRequest.Files[fileKey];
-                    var doclink = GetDocumentorfileUri(hpf);
-                    var manuscriptNo = httpRequest["ManuscriptNo"];
-                    var subjects = httpRequest["Subject"];
-                    var subjectId = Convert.ToInt32(subjects);
-                    var subjectName = db.subjectcontent_Table.Where(c => c.SubjectID == subjectId).Select(c => c.SubjectName).FirstOrDefault();
-                    var title = httpRequest["Title"];
-                    var manuscripttype = httpRequest["ManuscriptType"];
-                    var ManuscriptID = Convert.ToInt32(manuscripttype);
-                    var ManuscriptName = db.Manuscript_Table.Where(c => c.ManuscriptID == ManuscriptID).Select(c => c.ManuscriptName).FirstOrDefault();
-                    var abstracts = httpRequest["Abstract"];
+                    var mpl = httpRequest.Files[fileKey];
+                    var udl = httpRequest.Files[fileKey];
+                    doclink = GetDocumentorfileUri(hpf);
+                    undertakingdoclink = GetDocumentorfileUri(udl);
+                    manuscriptPDFLink = GetDocumentorfileUri(mpl);
+                    
                     // Read file data into a byte array
                     byte[] fileData;
                     using (var binaryReader = new BinaryReader(hpf.InputStream))
@@ -63,29 +70,32 @@ namespace FPL.Api.Controllers
                     }
 
                     // Create a new fileUpload entity
-                    ManuscriptSub doc = new ManuscriptSub()
-                    {
-                        Plagiarismurl = doclink,
-                        pdfurl = doclink,
-                        ManuscriptNo = manuscriptNo,
-                        Subject = subjectName,
-                        Title = title,
-                        ManuscriptTypeID = ManuscriptID,
-                        ManuscriptType = ManuscriptName,
-                        Abstract = abstracts,
-                        CreatedOn = DateTime.Now,
-                        docname = hpf.FileName,
-                        TitleID = subjectId,
-                        
-
-                    };
-
-                    // Add the entity to the context and save changes
-                    db.ManuscriptSubs.Add(doc);
                 }
+                ManuscriptSub doc = new ManuscriptSub()
+                {
+                    Plagiarismurl = doclink,
+                    Undertakingdocurl = undertakingdoclink,
+                    ManuscriptPDF = manuscriptPDFLink,
+                    ManuscriptNo = manuscriptNo,
+                    Subject = subjectName,
+                    Title = title,
+                    ManuscriptTypeID = ManuscriptID,
+                    ManuscriptType = ManuscriptName,
+                    Abstract = abstracts,
+                    CreatedOn = DateTime.Now,
+                    //Plagiarismdocname = hpf.FileName,
+                    //UndertakingDocName = udl.FileName,
+                    //ManuscriptPDFName = mpl.FileName,
+                    TitleID = subjectId,
 
-                // Outside the loop, save changes once
-                await db.SaveChangesAsync();
+                };
+
+                // Add the entity to the context and save changes
+            
+                db.ManuscriptSubs.Add(doc);
+
+            // Outside the loop, save changes once
+            await db.SaveChangesAsync();
 
                 return Ok("success");
             }
