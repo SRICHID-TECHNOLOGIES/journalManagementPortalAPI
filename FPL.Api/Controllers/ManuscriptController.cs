@@ -1,4 +1,5 @@
 ﻿using FPL.Dal.DataModel;
+using Microsoft.AspNetCore.Http;
 using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Blob;
 using System;
@@ -10,7 +11,6 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Http;
-
 
 namespace FPL.Api.Controllers
 {
@@ -38,10 +38,13 @@ namespace FPL.Api.Controllers
         {
             try
             {
-                var httpRequest = HttpContext.Current.Request;
-                var doclink = "";
-                var undertakingdoclink = "";
-                var manuscriptPDFLink = "";
+                HttpPostedFile hpf;
+                //HttpPostedFile udl;
+                //HttpPostedFile mpl;
+                var httpRequest = System.Web.HttpContext.Current.Request;
+                var Plagiarismdoclink = httpRequest["FileBlobLink"];
+                var undertakingdoclink =httpRequest["UndertakingFileBlobLink"];
+                var manuscriptPDFLink = httpRequest["ManuscriptPDFLink"];
                 var manuscriptNo = httpRequest["ManuscriptNo"];
                 var subjects = httpRequest["Subject"];
                 var subjectId = Convert.ToInt32(subjects);
@@ -51,29 +54,68 @@ namespace FPL.Api.Controllers
                 var ManuscriptID = Convert.ToInt32(manuscripttype);
                 var ManuscriptName = db.Manuscript_Table.Where(c => c.ManuscriptID == ManuscriptID).Select(c => c.ManuscriptName).FirstOrDefault();
                 var abstracts = httpRequest["Abstract"];
+                var doclink = "";
+                var Plagiarismdocname = "";
+                var UndertakingDocName = "";
+                var ManuscriptPDFName = "";
+
+                byte[] fileData = null;
+                HttpFileCollection hfc = System.Web.HttpContext.Current.Request.Files;
+
                 // Loop through uploaded files
-                
-                foreach (string fileKey in httpRequest.Files)
+
+                for (int iCnt = 0; iCnt <= hfc.Count - 1; iCnt++)
                 {
-                    var hpf = httpRequest.Files[fileKey];
-                    var mpl = httpRequest.Files[fileKey];
-                    var udl = httpRequest.Files[fileKey];
+                    hpf = hfc[iCnt];
                     doclink = GetDocumentorfileUri(hpf);
-                    undertakingdoclink = GetDocumentorfileUri(udl);
-                    manuscriptPDFLink = GetDocumentorfileUri(mpl);
-                    
-                    // Read file data into a byte array
-                    byte[] fileData;
+
+                    if(doclink != null)
+                    {
+                        if(hfc.AllKeys[iCnt] == "FileBlobLink")
+                        {
+                            Plagiarismdoclink = doclink;
+                            Plagiarismdocname = hpf.FileName;
+                        }
+
+                        if(hfc.AllKeys[iCnt] == "UndertakingFileBlobLink")
+                        {
+                            undertakingdoclink = doclink;
+                            UndertakingDocName = hpf.FileName;
+                        }
+
+                        if (hfc.AllKeys[iCnt] == "ManuscriptPDFLink")
+                        {
+                            manuscriptPDFLink = doclink;
+                            ManuscriptPDFName = hpf.FileName;
+                        }
+                    }
                     using (var binaryReader = new BinaryReader(hpf.InputStream))
                     {
                         fileData = binaryReader.ReadBytes(hpf.ContentLength);
                     }
+                }
+
+                    // foreach (string fileKey in httpRequest.Files)
+                    // {
+                    //var hpf = httpRequest.Files[fileKey];
+                    //var mpl = httpRequest.Files[fileKey];
+                    //var udl = httpRequest.Files[fileKey];
+                    //Plagiarismdoclink = GetDocumentorfileUri(hpf);
+                    //undertakingdoclink = GetDocumentorfileUri(udl);
+                    //manuscriptPDFLink = GetDocumentorfileUri(mpl);
+
+                    // Read file data into a byte array
+                    //byte[] fileData;
+                    //using (var binaryReader = new BinaryReader(hpf.InputStream))
+                    //{
+                    //    fileData = binaryReader.ReadBytes(hpf.ContentLength);
+                    //}
 
                     // Create a new fileUpload entity
-                }
-                ManuscriptSub doc = new ManuscriptSub()
+                    //  }
+                    ManuscriptSub doc = new ManuscriptSub()
                 {
-                    Plagiarismurl = doclink,
+                    Plagiarismurl = Plagiarismdoclink,
                     Undertakingdocurl = undertakingdoclink,
                     ManuscriptPDF = manuscriptPDFLink,
                     ManuscriptNo = manuscriptNo,
@@ -83,9 +125,9 @@ namespace FPL.Api.Controllers
                     ManuscriptType = ManuscriptName,
                     Abstract = abstracts,
                     CreatedOn = DateTime.Now,
-                    //Plagiarismdocname = hpf.FileName,
-                    //UndertakingDocName = udl.FileName,
-                    //ManuscriptPDFName = mpl.FileName,
+                    Plagiarismdocname = Plagiarismdocname,
+                    UndertakingDocName = UndertakingDocName,
+                    ManuscriptPDFName = ManuscriptPDFName,
                     TitleID = subjectId,
 
                 };
