@@ -59,6 +59,9 @@ namespace FPL.Api.Controllers
                 var UndertakingDocName = "";
                 var ManuscriptPDFName = "";
 
+                var email = httpRequest["Email"];
+                var registerID = db.Register_Table.Where(c => c.Email == email).Select(c => c.RegisterID).FirstOrDefault();
+
                 byte[] fileData = null;
                 HttpFileCollection hfc = System.Web.HttpContext.Current.Request.Files;
 
@@ -129,8 +132,8 @@ namespace FPL.Api.Controllers
                     UndertakingDocName = UndertakingDocName,
                     ManuscriptPDFName = ManuscriptPDFName,
                     TitleID = subjectId,
-
-                };
+                    RegisterID = registerID,
+                    };
 
                 // Add the entity to the context and save changes
             
