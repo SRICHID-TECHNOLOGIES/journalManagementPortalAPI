@@ -1,4 +1,5 @@
-﻿using FPL.Dal.DataModel;
+﻿using DocumentFormat.OpenXml.Office2010.Excel;
+using FPL.Dal.DataModel;
 using Microsoft.AspNetCore.Http;
 using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Blob;
@@ -132,6 +133,13 @@ namespace FPL.Api.Controllers
 
                 };
 
+
+
+
+
+
+
+
                 // Add the entity to the context and save changes
             
                 db.ManuscriptSubs.Add(doc);
@@ -147,6 +155,25 @@ namespace FPL.Api.Controllers
                 return InternalServerError(e);
             }
         }
+
+       
+
+        [HttpGet]
+        public async Task<IHttpActionResult> GetManuscriptDetailsByRegisterID([FromUri(Name = "id")] int id)
+        {
+            try
+            {
+               
+                var manuscriptcontentData = db.ManuscriptSubs.Where(c => c.RegisterID == id).ToList();
+                return Ok(manuscriptcontentData);
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
+
+
 
         public static string GetDocumentorfileUri(HttpPostedFile fileorimage)
         {
