@@ -1,16 +1,13 @@
 ﻿using FPL.Dal.DataModel;
-using Microsoft.AspNetCore.Http;
 using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Blob;
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Net;
-using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Http;
+
 
 namespace FPL.Api.Controllers
 {
@@ -33,6 +30,21 @@ namespace FPL.Api.Controllers
         }
 
 
+
+        [HttpGet]
+        public async Task<IHttpActionResult> getmanuscriptsubmissionData()
+        {
+            try
+            {
+                var getmanuscriptcontentData = db.ManuscriptSubs.ToList();
+                return Ok(getmanuscriptcontentData);
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+
+        }
         [HttpPost]
         public async Task<IHttpActionResult> Fileupload()
         {
@@ -41,7 +53,7 @@ namespace FPL.Api.Controllers
                 HttpPostedFile hpf;
                 //HttpPostedFile udl;
                 //HttpPostedFile mpl;
-                var httpRequest = System.Web.HttpContext.Current.Request;
+                var httpRequest = HttpContext.Current.Request;
                 var Plagiarismdoclink = httpRequest["FileBlobLink"];
                 var undertakingdoclink =httpRequest["UndertakingFileBlobLink"];
                 var manuscriptPDFLink = httpRequest["ManuscriptPDFLink"];
@@ -63,7 +75,7 @@ namespace FPL.Api.Controllers
                 var registerID = db.Register_Table.Where(c => c.Email == email).Select(c => c.RegisterID).FirstOrDefault();
 
                 byte[] fileData = null;
-                HttpFileCollection hfc = System.Web.HttpContext.Current.Request.Files;
+                HttpFileCollection hfc = HttpContext.Current.Request.Files;
 
                 // Loop through uploaded files
 
@@ -147,7 +159,7 @@ namespace FPL.Api.Controllers
             catch (Exception e)
             {
                 // Handle exceptions appropriately
-                return InternalServerError(e);
+                throw e ;
             }
         }
 
