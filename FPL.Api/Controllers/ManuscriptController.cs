@@ -205,8 +205,6 @@ namespace FPL.Api.Controllers
             }
         }
 
-
-
         public static string GetDocumentorfileUri(HttpPostedFile fileorimage)
         {
             if (fileorimage.ContentLength > 0)
