@@ -46,6 +46,20 @@ namespace FPL.Api.Controllers
             }
 
         }
+
+        [HttpGet]
+        public async Task<IHttpActionResult> FetchAuthorName()
+        {
+            try
+            {
+                var AuthorName = db.ManuscriptSubs.ToList();
+                return Ok(AuthorName);
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
         [HttpPost]
         public async Task<IHttpActionResult> Fileupload()
         {
