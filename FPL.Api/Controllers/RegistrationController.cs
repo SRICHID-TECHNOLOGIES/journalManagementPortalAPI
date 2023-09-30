@@ -42,7 +42,8 @@ namespace FPL.Api.Controllers
                     Password = data.Password,
                     ConfirmPassword = data.ConfirmPassword,
                     RoleID=data.RoleID,
-                    RoleName=data.RoleName
+                    RoleName=data.RoleName,
+                    CreratedOn = DateTime.Now
                 };
                 db.Register_Table.Add(registration);
                 db.SaveChanges();
