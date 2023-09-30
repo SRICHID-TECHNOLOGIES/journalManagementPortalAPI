@@ -188,14 +188,14 @@ namespace FPL.Api.Controllers
             }
         }
 
-       
+
 
         [HttpGet]
         public async Task<IHttpActionResult> GetManuscriptDetailsByRegisterID([FromUri(Name = "id")] int id)
         {
             try
             {
-               
+
                 var manuscriptcontentData = db.ManuscriptSubs.Where(c => c.RegisterID == id).ToList();
                 return Ok(manuscriptcontentData);
             }
