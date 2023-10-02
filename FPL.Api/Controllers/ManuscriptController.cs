@@ -30,6 +30,20 @@ namespace FPL.Api.Controllers
             }
         }
 
+        [HttpGet]
+        public async Task<IHttpActionResult> getReviewerList()
+        {
+            try
+            {
+                var ReviewerList = db.Register_Table.Where(c => c.RoleID == 1005).ToList();
+                return Ok(ReviewerList);
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+
+        }
 
 
         [HttpGet]
