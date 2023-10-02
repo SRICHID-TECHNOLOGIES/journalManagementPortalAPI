@@ -60,6 +60,20 @@ namespace FPL.Api.Controllers
             }
 
         }
+
+        [HttpGet]
+        public async Task<IHttpActionResult> FetchAuthorName()
+        {
+            try
+            {
+                var AuthorName = db.ManuscriptSubs.ToList();
+                return Ok(AuthorName);
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
         [HttpPost]
         public async Task<IHttpActionResult> Fileupload()
         {
@@ -188,14 +202,14 @@ namespace FPL.Api.Controllers
             }
         }
 
-       
+
 
         [HttpGet]
         public async Task<IHttpActionResult> GetManuscriptDetailsByRegisterID([FromUri(Name = "id")] int id)
         {
             try
             {
-               
+
                 var manuscriptcontentData = db.ManuscriptSubs.Where(c => c.RegisterID == id).ToList();
                 return Ok(manuscriptcontentData);
             }
@@ -204,8 +218,6 @@ namespace FPL.Api.Controllers
                 throw e;
             }
         }
-
-
 
         public static string GetDocumentorfileUri(HttpPostedFile fileorimage)
         {
