@@ -29,10 +29,61 @@ namespace FPL.Api.Controllers
                 var reviewer3ID = Convert.ToInt32(reviewer3);
                 var reviewer3Name = db.Register_Table.Where(c => c.RegisterID == reviewer3ID).Select(c => c.FullName).FirstOrDefault();
 
+                var authorID = db.ManuscriptSubs.Where(c => c.ManuscriptNo == data.ManuscriptNo).Select(c => c.RegisterID).FirstOrDefault();
+                var authorName = db.ManuscriptSubs.Where(c => c.RegisterID == authorID).Select(c => c.AuthorName).FirstOrDefault();
+
+                var manuscriptSubmittedDate = db.ManuscriptSubs.Where(c => c.ManuscriptNo == data.ManuscriptNo).Select(c => c.CreatedOn).FirstOrDefault();
+
+                var subjectID = db.subjectcontent_Table.Where(c => c.SubjectName == data.Subject).Select(c => c.SubjectID).FirstOrDefault();
+
                 Table_SubmissionForReview reviewersList = new Table_SubmissionForReview()
                 {
                     Reviewer1 = reviewer1Name,
+                    ManuscriptNo = data.ManuscriptNo,
+                    Subject = data.Subject,
+                    Title = data.Title,
+                    CreatedOn = DateTime.Now,
+                    ManuscriptName = data.manuscriptPDFName,
+                    ManuscriptID = manuscriptID,
+                    ManuscriptPDF = data.ManuscriptPDF,
+                    AuthorID = authorID,
+                    AuthorName = authorName, 
+                    ManuscriptSubmittedDate = manuscriptSubmittedDate,
+                    SubjectID = subjectID,
+                    UndertakingForm = data.undertakingdocurl,
+                    PlagiarismReport = data.plagiarismurl,
+                    ReviewerID = reviewer1ID,
+                    ReviewerName = reviewer1Name,
+                    SentForReviewDate = DateTime.Now
+                };
+
+                db.Table_SubmissionForReview.Add(reviewersList);
+                Table_SubmissionForReview reviewersList2 = new Table_SubmissionForReview()
+                {
                     Reviewer2 = reviewer2Name,
+                    ManuscriptNo = data.ManuscriptNo,
+                    Subject = data.Subject,
+                    Title = data.Title,
+                    CreatedOn = DateTime.Now,
+                    ManuscriptName = data.manuscriptPDFName,
+                    ManuscriptID = manuscriptID,
+                    ManuscriptPDF = data.ManuscriptPDF,
+                    AuthorID = authorID,
+                    AuthorName = authorName,
+                    ManuscriptSubmittedDate = manuscriptSubmittedDate,
+                    SubjectID = subjectID,
+                    UndertakingForm = data.undertakingdocurl,
+                    PlagiarismReport = data.plagiarismurl,
+                    ReviewerID = reviewer2ID,
+                    ReviewerName = reviewer2Name,
+                    SentForReviewDate = DateTime.Now
+
+                };
+
+                db.Table_SubmissionForReview.Add(reviewersList2);
+
+                Table_SubmissionForReview reviewersList3 = new Table_SubmissionForReview()
+                {
                     Reviewer3 = reviewer3Name,
                     ManuscriptNo = data.ManuscriptNo,
                     Subject = data.Subject,
@@ -41,9 +92,20 @@ namespace FPL.Api.Controllers
                     ManuscriptName = data.manuscriptPDFName,
                     ManuscriptID = manuscriptID,
                     ManuscriptPDF = data.ManuscriptPDF,
+                    AuthorID = authorID,
+                    AuthorName = authorName,
+                    ManuscriptSubmittedDate = manuscriptSubmittedDate,
+                    SubjectID = subjectID,
+                    UndertakingForm = data.undertakingdocurl,
+                    PlagiarismReport = data.plagiarismurl,
+                    ReviewerID = reviewer3ID,
+                    ReviewerName = reviewer3Name,
+                    SentForReviewDate = DateTime.Now
+
                 };
 
-                db.Table_SubmissionForReview.Add(reviewersList);
+                db.Table_SubmissionForReview.Add(reviewersList3);
+
                 db.SaveChanges();
 
                 return Ok("success");
@@ -65,8 +127,8 @@ namespace FPL.Api.Controllers
         public string Title { get; set; }
         public Nullable<int> ManuscriptID { get; set; }
         public string manuscriptPDFName { get; set; }
-        public string PlagiarismReport { get; set; }
-        public string UndertakingForm { get; set; }
+        public string plagiarismurl { get; set; }
+        public string undertakingdocurl { get; set; }
         public string ManuscriptPDF { get; set; }
         public Nullable<int> AuthorID { get; set; }
         public string AuthorName { get; set; }

@@ -1,5 +1,6 @@
 ﻿using DocumentFormat.OpenXml.Office2010.Excel;
 using FPL.Dal.DataModel;
+
 using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Blob;
 using System;
@@ -176,7 +177,7 @@ namespace FPL.Api.Controllers
                     ManuscriptPDFName = ManuscriptPDFName,
                     TitleID = subjectId,
                     RegisterID = RID,
-                    AuthorName = authorName,
+                    AuthorName = authorName
                     };
 
 
